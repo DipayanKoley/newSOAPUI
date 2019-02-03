@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testSuite id="c3c13f6c-7a21-45ce-964d-30a884face47" name="PetTestSuite" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="c3c13f6c-7a21-45ce-964d-30a884face47fileName">PetTestSuite</con:setting></con:settings><con:savedRecentRuns>1</con:savedRecentRuns><con:runType>SEQUENTIAL</con:runType><con:properties/><con:reportParameters/></con:testSuite>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="a5eb32d9-fe2e-46fb-980b-0f65780740a0" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="post_PetTestCase" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="a5eb32d9-fe2e-46fb-980b-0f65780740a0fileName">post_PetTestCase</con:setting></con:settings><con:savedRecentRuns>1</con:savedRecentRuns><con:testStep type="datasource" name="ds_PetData" id="a0288535-47d5-4d2a-aa19-a03f6cab39b8"><con:settings/><con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:dataSource type="File"><con:configuration><file>${projectDir}/TestData/TestData.xlsx</file><worksheet>Data</worksheet><cell>A2</cell><ignoreEmpty>true</ignoreEmpty><evaluateFormulas>false</evaluateFormulas></con:configuration></con:dataSource><con:shared>true</con:shared><con:restartShared>true</con:restartShared><con:property>Sl.No</con:property><con:property>PetName</con:property><con:property>Expected PetId</con:property><con:completeLastOperation>true</con:completeLastOperation><con:restartOnRun>true</con:restartOnRun></con:config></con:testStep><con:testStep type="restrequest" name="rest_POSTPet" id="ace096e2-66ed-463a-92cf-35bc63fd0fe0"><con:settings/><con:config service="https://petstore.swagger.io" resourcePath="/v2/pet" methodName="Pet" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="rest_POSTPet" id="33c8e12e-6bc9-406a-85f7-1e3da7cf199e" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://petstore.swagger.io</con:endpoint><con:request>{
+  "id": 0,
+  "category": {
+    "id": 0,
+    "name": "string"
+  },
+  "name": "${ds_PetData#PetName}",
+  "photoUrls": [
+    "string"
+  ],
+  "tags": [
+    {
+      "id": 0,
+      "name": "string"
+    }
+  ],
+  "status": "available"
+}</con:request><con:originalUri>https://petstore.swagger.io/v2/pet</con:originalUri><con:assertion type="Response SLA Assertion" id="52df0b1d-b2d1-4e05-ace4-785f2cacd08a" name="Response SLA"><con:configuration><SLA>200</SLA></con:configuration></con:assertion><con:assertion type="Simple Contains" id="cebd9195-bd16-4c38-9132-486de8376167" name="Contains"><con:configuration><token>id</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="XPath Match" id="51f48575-82ef-40de-9c5a-92bfbd026c90" name="XPath Match"><con:configuration/></con:assertion><con:assertion type="JsonPath Match" id="af73dd95-b6d7-4f73-9ea2-ac84efb32cd1" name="JsonPath Match"><con:configuration/></con:assertion><con:assertion type="JsonPath RegEx Match" id="aa59df9f-a36f-4fcc-b4b7-361f94aa3bd8" name="JsonPath RegEx Match"><con:configuration><path>$['id']</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments><regEx>\d{19}</regEx></con:configuration></con:assertion><con:assertion type="Valid HTTP Status Codes" id="e63863f7-50db-4b67-a56f-925a4b92d03e" name="Valid HTTP Status Codes"><con:settings/><con:configuration><codes>400,404</codes></con:configuration></con:assertion><con:assertion type="Invalid HTTP Status Codes" id="61bfb35a-419a-4e0b-b01f-ec60441dc5c7" name="Invalid HTTP Status Codes"><con:configuration><codes/></con:configuration></con:assertion><con:assertion type="Schema Compliance" id="df995b9c-8af8-42a8-88b3-6fea358465f7" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="transfer" name="propTrans_Prop" id="1e0ba69e-17f6-4a51-bf0f-484eafd7d625"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>rest_POSTPet</con:sourceStep><con:sourcePath>$.['id']</con:sourcePath><con:targetType>PetId</con:targetType><con:targetStep>props_Pet</con:targetStep><con:targetPath/><con:type>JSONPATH</con:type><con:targetTransferType>JSONPATH</con:targetTransferType><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="properties" name="props_Pet" id="fa0c3f74-10b0-4164-b890-46bf615673a5"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>PetId</con:name><con:value>9199424981609279876</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="groovy" name="gs_Compare" id="289642bb-6f9b-4bdc-a093-0c3f67c503b5"><con:settings/><con:config><script>def expectedPetId = context.expand('${ds_PetData#Expected PetId}')
+def actualPetId = context.expand( '${props_Pet#PetId}' )
+
+if(expectedPetId == actualPetId)
+{
+	testRunner.testCase.setPropertyValue('Status', "Pass")
+}
+else
+{
+	testRunner.testCase.setPropertyValue('Status', "Fail")
+}</script></con:config></con:testStep><con:testStep type="datasink" name="dataSink_Pet" id="39e303e0-17c4-4f98-8c5e-45d54473f08f"><con:settings/><con:config xsi:type="con:DataSinkStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:dataSink type="Excel"><con:configuration><file>${projectDir}/TestData/Result.xlsx</file><outfile>${projectDir}/TestData/Result.xlsx</outfile><worksheet>Result</worksheet><cell>A2</cell><evaluateFormulas>false</evaluateFormulas><append>false</append></con:configuration></con:dataSink><con:properties><con:property><con:name>Sl.No</con:name><con:value>${ds_PetData#Sl.No}</con:value></con:property><con:property><con:name>PetName</con:name><con:value>${ds_PetData#PetName}</con:value></con:property><con:property><con:name>Expected PetId</con:name><con:value>${ds_PetData#Expected PetId}</con:value></con:property><con:property><con:name>Actual PetId</con:name><con:value>${props_Pet#PetId}</con:value></con:property><con:property><con:name>Status</con:name><con:value>${#TestCase#Status}</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="datasourceloop" name="dsLoop_PetData" id="4a6d8cb1-4805-4303-a79e-e26b215b8ff0"><con:settings/><con:config><dataSourceStep>ds_PetData</dataSourceStep><targetStep>rest_POSTPet</targetStep><discardResults>true</discardResults></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="5fd79bb8-dcce-404d-b514-e6b7a0923382"><con:settings/><con:config><script>import groovy.json.JsonSlurper
+
+testRunner.testCase.getTestStepByName("FTP").setDisabled(true)
+
+def list = [1,2,7,2,9,2]
+
+/*for(int i = 0;i&lt;list.size();i++)
+{
+	log.info list.get(i)
+}*/
+
+/*for(Integer a:list)
+{
+	log.info a
+}*/
+
+/*list.each
+{
+	i->
+	log.info i
+}*/
+
+//log.info list
+
+/*def map = [1:"Dipayan",2:"Hardika"]
+
+log.info map
+
+map.each
+{
+	k,v->
+	log.info k
+	log.info v
+}*/
+
+def response = context.expand( '${rest_POSTPet#Response}' )
+
+log.info response
+
+def json = new JsonSlurper()
+
+def j = json.parseText(response)
+
+def d =  j.'id'
+
+log.info d
+
+/*for(int i = 0;&lt;d.size();i++)
+{
+	if(d.get(i)=="")
+	{
+		
+	}
+}*/</script></con:config></con:testStep><con:testStep type="ftp" name="FTP" id="e3dc566a-b032-4c0f-9bce-1e98c3247152" disabled="true"><con:settings/><con:config xsi:type="con:FTPTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transaction/></con:config></con:testStep><con:testStep type="assertionteststep" name="Assertion" id="eb1f0881-b7c4-4a56-a51b-713b5ee7a373"><con:settings/><con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:entry><con:id>43d5c460-1f1c-4d63-a54d-4ec46cee23ca</con:id><con:isGroup>true</con:isGroup><con:sourceId>eb1f0881-b7c4-4a56-a51b-713b5ee7a373</con:sourceId><con:propertyName>Group</con:propertyName><con:assertion type="GroupAssertion" name="Group 1" id="4c6a5676-c1d4-4c68-9ae4-a924edcf2adb"><con:configuration xsi:type="con:GroupAssertionList"><con:assertions><con:id>0fe925b0-1cd7-4b02-9e7b-dce98d3fab86</con:id><con:isGroup>false</con:isGroup><con:sourceId>a5eb32d9-fe2e-46fb-980b-0f65780740a0</con:sourceId><con:propertyName>Status</con:propertyName><con:assertion type="Simple Contains" name="Contains" id="65f69ebf-b3b2-4aba-9e09-52fcfcef7155"><con:configuration><token>200</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion></con:assertions><con:assertions><con:id>424bab7f-7cf2-44ce-8c62-0b6ebb6ee690</con:id><con:isGroup>false</con:isGroup><con:sourceId>a5eb32d9-fe2e-46fb-980b-0f65780740a0</con:sourceId><con:propertyName>Status</con:propertyName><con:assertion type="Simple Equals" name="Equals" id="ed27db38-55df-473f-8cd5-3bd30fa28a3d"><con:configuration><patternText>1234</patternText><caseSensitive>true</caseSensitive></con:configuration></con:assertion></con:assertions><con:operation>AND</con:operation></con:configuration></con:assertion></con:entry></con:config></con:testStep><con:testStep type="groovy" name="gs" id="a8fb6d5a-576e-4635-a330-3aad54388078"><con:settings/><con:config><script>log.info "hello"</script></con:config></con:testStep><con:testStep type="fileWaitTestStep" name="File Wait" id="c99d8a8b-9157-4d01-9eac-1470fd430e50"><con:settings/><con:config><FileName/><Timeout>2</Timeout><timeout_measure>0</timeout_measure><DeleteFile>false</DeleteFile></con:config></con:testStep><con:properties><con:property><con:name>Status</con:name><con:value>Fail</con:value></con:property></con:properties><con:reportParameters/><con:breakPoints><con:testStepId>4a6d8cb1-4805-4303-a79e-e26b215b8ff0</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>1e0ba69e-17f6-4a51-bf0f-484eafd7d625</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>fa0c3f74-10b0-4164-b890-46bf615673a5</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>39e303e0-17c4-4f98-8c5e-45d54473f08f</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>289642bb-6f9b-4bdc-a093-0c3f67c503b5</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>eb1f0881-b7c4-4a56-a51b-713b5ee7a373</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>5fd79bb8-dcce-404d-b514-e6b7a0923382</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>c99d8a8b-9157-4d01-9eac-1470fd430e50</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>a8fb6d5a-576e-4635-a330-3aad54388078</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints></con:testCase>
